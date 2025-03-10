@@ -234,6 +234,7 @@ crops = {
         'past_yields': [1.8, 2.0, 2.2, 2.3, 2.5, 2.7]
     }
 }
+# Function to fetch crop details
 def get_crop_details(crop_name):
     return crops.get(crop_name, {})
 
@@ -241,30 +242,25 @@ def get_crop_details(crop_name):
 def display_crop_info(crop_name):
     crop = get_crop_details(crop_name)
     if crop:
+        st.markdown(f'<img src="{crop["image"]}" style="width:100%; max-height:400px; object-fit:cover;">', unsafe_allow_html=True)
+
         st.markdown(f"## 🌱 {crop_name} Cultivation Process")
         st.markdown(f"**🔹 Optimal Planting Period:** {crop['optimal_period']}")
         st.markdown(f"**🔹 Water Requirement:** {crop['water_requirement']}")
         st.markdown(f"**🔹 Suitable Soil Type:** {crop['soil_type']}")
         st.markdown(f"**🔹 Cultivation Steps:** {crop['process']}")
 
-# Function to display past history with table and bar chart
+# Function to display past history
 def display_past_history(crop_name):
     crop = get_crop_details(crop_name)
     if crop:
         st.markdown(f"## 📜 Past History of {crop_name} Cultivation")
         
-        history_data = pd.DataFrame({
+        history_data = {
             "Category": ["Rotation Crops", "Soil Health", "Water Management"],
             "Details": [', '.join(crop['rotation_strategies']), crop['soil_health'], crop['water_management']]
-        })
+        }
         st.dataframe(history_data, width=700)
-        
-        if 'past_yields' in crop:
-            yield_data = pd.DataFrame(list(crop['past_yields'].items()), columns=['Year', 'Yield (kg/ha)'])
-            fig = px.bar(yield_data, x='Year', y='Yield (kg/ha)', title=f'Past Yields of {crop_name}',
-                         labels={'Year': 'Year', 'Yield (kg/ha)': 'Yield (kg/ha)'},
-                         color='Yield (kg/ha)', text_auto=True)
-            st.plotly_chart(fig)
 
 # Streamlit UI with Sidebar Navigation
 st.set_page_config(page_title="Smart Farming Assistant", layout="wide")
@@ -275,7 +271,7 @@ selected_option = st.sidebar.radio("Navigation", ["Home", "Crop Details", "Past 
 st.sidebar.markdown("### 🌍 Select a Crop")
 selected_crop = st.sidebar.selectbox("Choose a crop:", list(crops.keys()))
 
-st.sidebar.markdown("💡 Developed to support farmers with optimized cultivation practices. JAI KISAAN! JAI JAVAAN!!")
+st.sidebar.markdown("💡 Developed to support farmers with optimized cultivation practices.JAI KISAAN!  JAI JAVAAN !!")
 
 # Page Routing
 if selected_option == "Home":
